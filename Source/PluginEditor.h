@@ -26,7 +26,7 @@ public:
     void sliderValueChanged(Slider *) override;
 
 private:
-    // audio processor's listener pointer
+    // audio processor's pointer
     UpmixerAudioProcessor &processor;
     
     // sliders
