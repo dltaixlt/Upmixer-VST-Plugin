@@ -4,6 +4,10 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <math.h>
+#include <stdlib.h>
+#include <complex.h>
+#include <limits>
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -55,6 +59,36 @@ public:
         frequencyDomainBuffer_left.clear (fftSize);
         frequencyDomainBuffer_right.realloc (fftSize);
         frequencyDomainBuffer_right.clear (fftSize);
+        
+        NL.realloc (fftSize);
+        NL.clear (fftSize);
+        NR.realloc (fftSize);
+        NR.clear (fftSize);
+        Direct.realloc (fftSize);
+        Direct.clear (fftSize);
+        DL.realloc (fftSize);
+        DL.clear (fftSize);
+        DR.realloc (fftSize);
+        DR.clear (fftSize);
+        DC_mag.realloc (fftSize);
+        DC_mag.clear (fftSize);
+        DC.realloc (fftSize);
+        DC.clear (fftSize);
+        CL.realloc (fftSize);
+        CL.clear (fftSize);
+        CR.realloc (fftSize);
+        CR.clear (fftSize);
+        
+        timeDomain_DL.realloc (fftSize);
+        timeDomain_DL.clear (fftSize);
+        timeDomain_DR.realloc (fftSize);
+        timeDomain_DR.clear (fftSize);
+        timeDomain_DC.realloc (fftSize);
+        timeDomain_DC.clear (fftSize);
+        timeDomain_NL.realloc (fftSize);
+        timeDomain_NL.clear (fftSize);
+        timeDomain_NR.realloc (fftSize);
+        timeDomain_NR.clear (fftSize);
     }
 
     
@@ -72,6 +106,22 @@ private:
     HeapBlock<dsp::Complex<float>> timeDomainBuffer_right;
     HeapBlock<dsp::Complex<float>> frequencyDomainBuffer_left;
     HeapBlock<dsp::Complex<float>> frequencyDomainBuffer_right;
+    
+    HeapBlock<dsp::Complex<float>> Direct;
+    HeapBlock<dsp::Complex<float>> NL;
+    HeapBlock<dsp::Complex<float>> NR;
+    HeapBlock<dsp::Complex<float>> DL;
+    HeapBlock<dsp::Complex<float>> DR;
+    HeapBlock<dsp::Complex<float>> DC_mag;
+    HeapBlock<dsp::Complex<float>> DC;
+    HeapBlock<dsp::Complex<float>> CL;
+    HeapBlock<dsp::Complex<float>> CR;
+    
+    HeapBlock<dsp::Complex<float>> timeDomain_DL;
+    HeapBlock<dsp::Complex<float>> timeDomain_DR;
+    HeapBlock<dsp::Complex<float>> timeDomain_DC;
+    HeapBlock<dsp::Complex<float>> timeDomain_NL;
+    HeapBlock<dsp::Complex<float>> timeDomain_NR;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UpmixerAudioProcessor)
 };

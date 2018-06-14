@@ -138,23 +138,52 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
         timeDomainBuffer_right[sample].imag (0.0f);
     }
     
-    // main processing loop
+    // FFT - Analysis
     fft->perform (timeDomainBuffer_left, frequencyDomainBuffer_left, false);
     fft->perform (timeDomainBuffer_right, frequencyDomainBuffer_right, false);
     
-    fft->perform (frequencyDomainBuffer_left, timeDomainBuffer_left, true);
-    fft->perform (frequencyDomainBuffer_right, timeDomainBuffer_right, true);
+    // Main Upmixing Processing Loop
+    for (int sample = 0; sample < numSamples; ++sample) {
+        // calculation of Panning Coefficients
+        float aL =  abs(frequencyDomainBuffer_left[sample]) / pow(pow(abs(frequencyDomainBuffer_left[sample]), 2) + pow(abs(frequencyDomainBuffer_right[sample]), 2), 0.5);
+        float aR =  abs(frequencyDomainBuffer_right[sample]) / pow(pow(abs(frequencyDomainBuffer_left[sample]), 2) + pow(abs(frequencyDomainBuffer_right[sample]), 2), 0.5);
+        
+        
+        // calculation of Direct Component
+        float phi = 0.6 * MathConstants<float>::pi;
+        std::complex<float> j(0.0, 1.0);
+        Direct[sample] = (frequencyDomainBuffer_left[sample] * exp(j*phi) - frequencyDomainBuffer_right[sample]) / (aL * exp(j*phi) - aR);
+        
+        // calculation of Ambient(L&R) Components
+        DL[sample] = Direct[sample] * aL;
+        DR[sample] = Direct[sample] * aR;
+        NL[sample] = frequencyDomainBuffer_left[sample] - DL[sample];
+        NR[sample] = frequencyDomainBuffer_right[sample] - DR[sample];
+        
+        // up-mixing Direct Component
+        DC_mag[sample] = sqrt(0.5) * (abs(DL[sample]+DR[sample])-abs(DL[sample]-DR[sample])); // Center Channel Magnitude
+        float nl_dbl_min = std::numeric_limits<float>::min();
+        DC[sample] = ((DL[sample]+DR[sample]) * DC_mag[sample]) / (abs(DL[sample]+DR[sample])+nl_dbl_min); // Calculation of Center Channel
+        float tmpVar2 = (float) sqrt(0.5);
+        CL[sample] = DL[sample] - DC[sample]*tmpVar2; // Calculation of Left & Right Channels
+        CR[sample] = DR[sample] - DC[sample]*tmpVar2; // Calculation of Left & Right Channels
+    }
+    
+    // iFFT - Synthesis
+    fft->perform (CL, timeDomain_DL, true);
+    fft->perform (CR, timeDomain_DR, true);
+    fft->perform (DC, timeDomain_DC, true);
+    fft->perform (NL, timeDomain_NL, true);
+    fft->perform (NR, timeDomain_NR, true);
     
     
     // main STFT synthesis loop
     for (int sample = 0; sample < numSamples; ++sample) {
-        float monoDataIn = (timeDomainBuffer_left[sample].real() + timeDomainBuffer_right[sample].real()) / 2;
-        
-        ChannelDataOut_1[sample] = (timeDomainBuffer_left[sample].real() * gainFS) + (monoDataIn * gainFA);
-        ChannelDataOut_2[sample] = (timeDomainBuffer_right[sample].real() * gainFS) + (monoDataIn * gainFA);
-        ChannelDataOut_3[sample] = monoDataIn;
-        ChannelDataOut_4[sample] = timeDomainBuffer_left[sample].real() * gainRA;
-        ChannelDataOut_5[sample] = timeDomainBuffer_right[sample].real() * gainRA;
+        ChannelDataOut_1[sample] = (timeDomain_DL[sample].real() * gainFS) + (timeDomain_NL[sample].real() * gainFA);
+        ChannelDataOut_2[sample] = (timeDomain_DR[sample].real() * gainFS) + (timeDomain_NR[sample].real() * gainFA);
+        ChannelDataOut_3[sample] = timeDomain_DC[sample].real();
+        ChannelDataOut_4[sample] = timeDomain_NL[sample].real() * gainRA;
+        ChannelDataOut_5[sample] = timeDomain_NR[sample].real() * gainRA;
     }
 }
 // ==============================================================================
