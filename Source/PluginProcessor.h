@@ -12,8 +12,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-using namespace std::complex_literals;
-
 
 // ========== Declare the Plug-In's processor class ==========
 class UpmixerAudioProcessor  : public AudioProcessor
@@ -104,9 +102,6 @@ public:
 private:
     int fftSize;
     ScopedPointer<dsp::FFT> fft;
-    
-    // declare const vars for Direct Component calculation 
-    float const phi = 0.6 * MathConstants<float>::pi;
 
     HeapBlock<dsp::Complex<float>> timeDomainBuffer_left;
     HeapBlock<dsp::Complex<float>> timeDomainBuffer_right;

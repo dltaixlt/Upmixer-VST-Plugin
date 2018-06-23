@@ -90,7 +90,7 @@ void UpmixerAudioProcessor::changeProgramName (int index, const String& newName)
 
 // ========== Define prepareToPlay Method ==========
 void UpmixerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
-{    
+{
     updateFFTsize (2048);
 }
 
@@ -138,18 +138,19 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     fft->perform (timeDomainBuffer_left, frequencyDomainBuffer_left, false);
     fft->perform (timeDomainBuffer_right, frequencyDomainBuffer_right, false);
     
-    // declare const vars for Direct Component calculation
-    std::complex<float> j(0.0,1.0);
+    // declare const var for Direct Component calculation
+    // exp(i*0.6*pi) = cos(0.6*pi) + i*sin(0.6*pi) = tmpExp
+    std::complex<float> tmpExp(-0.30901699437, -0.30901699437);
     
     // Main Upmixing Processing Loop
     for (int sample = 0; sample < numSamples; ++sample) {
         // calculation of Panning Coefficients
-        float aL =  abs(frequencyDomainBuffer_left[sample]) / pow(pow(abs(frequencyDomainBuffer_left[sample]), 2) + pow(abs(frequencyDomainBuffer_right[sample]), 2), 0.5);
-        float aR =  abs(frequencyDomainBuffer_right[sample]) / pow(pow(abs(frequencyDomainBuffer_left[sample]), 2) + pow(abs(frequencyDomainBuffer_right[sample]), 2), 0.5);
+        float aL =  abs(frequencyDomainBuffer_left[sample]) / sqrt( abs(frequencyDomainBuffer_left[sample])*abs(frequencyDomainBuffer_left[sample]) + abs(frequencyDomainBuffer_right[sample])*abs(frequencyDomainBuffer_right[sample]) );
+        float aR =  abs(frequencyDomainBuffer_right[sample]) / sqrt( abs(frequencyDomainBuffer_left[sample])*abs(frequencyDomainBuffer_left[sample]) + abs(frequencyDomainBuffer_right[sample])*abs(frequencyDomainBuffer_right[sample]) );
         
         
         // calculation of Direct Component
-        Direct[sample] = (frequencyDomainBuffer_left[sample] * exp(j*phi) - frequencyDomainBuffer_right[sample]) / (aL * exp(j*phi) - aR);
+        Direct[sample] = (frequencyDomainBuffer_left[sample] * tmpExp - frequencyDomainBuffer_right[sample]) / (aL * tmpExp - aR);
         
         // calculation of Ambient(L&R) Components
         DL[sample] = Direct[sample] * aL;
@@ -158,12 +159,12 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
         NR[sample] = frequencyDomainBuffer_right[sample] - DR[sample];
         
         // up-mixing Direct Component
-        DC_mag[sample] = sqrt(0.5) * (abs(DL[sample]+DR[sample])-abs(DL[sample]-DR[sample])); // Center Channel Magnitude
+        // sqrt(0.5) = 0.70710678118
+        DC_mag[sample] = (float)0.70710678118 * (abs(DL[sample]+DR[sample])-abs(DL[sample]-DR[sample])); // Center Channel Magnitude
         float nl_dbl_min = std::numeric_limits<float>::min();
         DC[sample] = ((DL[sample]+DR[sample]) * DC_mag[sample]) / (abs(DL[sample]+DR[sample])+nl_dbl_min); // Calculation of Center Channel
-        float tmpVar2 = (float) sqrt(0.5);
-        CL[sample] = DL[sample] - DC[sample]*tmpVar2; // Calculation of Left & Right Channels
-        CR[sample] = DR[sample] - DC[sample]*tmpVar2; // Calculation of Left & Right Channels
+        CL[sample] = DL[sample] - DC[sample]*(float)0.70710678118; // Calculation of Left & Right Channels
+        CR[sample] = DR[sample] - DC[sample]*(float)0.70710678118; // Calculation of Left & Right Channels
     }
     
     // iFFT - Synthesis
@@ -172,7 +173,6 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     fft->perform (DC, timeDomain_DC, true);
     fft->perform (NL, timeDomain_NL, true);
     fft->perform (NR, timeDomain_NR, true);
-    
     
     // main STFT synthesis loop
     for (int sample = 0; sample < numSamples; ++sample) {
