@@ -90,11 +90,7 @@ void UpmixerAudioProcessor::changeProgramName (int index, const String& newName)
 
 // ========== Define prepareToPlay Method ==========
 void UpmixerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
-{
-    gainFA = pow(10, 0 / 20);
-    gainFS = pow(10, -12 / 20);
-    gainRA = pow(10, -12 / 20);
-    
+{    
     updateFFTsize (2048);
 }
 
@@ -142,6 +138,9 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     fft->perform (timeDomainBuffer_left, frequencyDomainBuffer_left, false);
     fft->perform (timeDomainBuffer_right, frequencyDomainBuffer_right, false);
     
+    // declare const vars for Direct Component calculation
+    std::complex<float> j(0.0,1.0);
+    
     // Main Upmixing Processing Loop
     for (int sample = 0; sample < numSamples; ++sample) {
         // calculation of Panning Coefficients
@@ -150,8 +149,6 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
         
         
         // calculation of Direct Component
-        float phi = 0.6 * MathConstants<float>::pi;
-        std::complex<float> j(0.0, 1.0);
         Direct[sample] = (frequencyDomainBuffer_left[sample] * exp(j*phi) - frequencyDomainBuffer_right[sample]) / (aL * exp(j*phi) - aR);
         
         // calculation of Ambient(L&R) Components

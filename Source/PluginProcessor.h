@@ -3,6 +3,7 @@
 #pragma once
 
 #define _USE_MATH_DEFINES
+
 #include <cmath>
 #include <math.h>
 #include <stdlib.h>
@@ -10,6 +11,8 @@
 #include <limits>
 
 #include "../JuceLibraryCode/JuceHeader.h"
+
+using namespace std::complex_literals;
 
 
 // ========== Declare the Plug-In's processor class ==========
@@ -90,9 +93,9 @@ public:
         timeDomain_NR.realloc (fftSize);
         timeDomain_NR.clear (fftSize);
     }
-
     
-    // declare custom variables
+    
+    // declare slider parameter vars
     double gainFS;
     double gainFA;
     double gainRA;
@@ -101,6 +104,9 @@ public:
 private:
     int fftSize;
     ScopedPointer<dsp::FFT> fft;
+    
+    // declare const vars for Direct Component calculation 
+    float const phi = 0.6 * MathConstants<float>::pi;
 
     HeapBlock<dsp::Complex<float>> timeDomainBuffer_left;
     HeapBlock<dsp::Complex<float>> timeDomainBuffer_right;
