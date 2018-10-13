@@ -14,7 +14,7 @@ class UpmixerAudioProcessorEditor  : public AudioProcessorEditor,
                                      public Slider::Listener
 {
 public:
-    // declare constractor and deconstractor
+    // declare constructor and deconstructor
     UpmixerAudioProcessorEditor(UpmixerAudioProcessor &p);
     ~UpmixerAudioProcessorEditor();
 
@@ -26,7 +26,7 @@ public:
     void sliderValueChanged(Slider *) override;
 
 private:
-    // audio processor's pointer
+    // audio processor's object
     UpmixerAudioProcessor &processor;
     
     // sliders

@@ -4,14 +4,14 @@
 #include "PluginEditor.h"
 
 
-// ========== Define Constractor ==========
+// ========== Define Constructor ==========
 UpmixerAudioProcessor::UpmixerAudioProcessor()
 {
     updateFFTsize (2048);
 }
 
 
-// ========== Define Deconstractor ==========
+// ========== Define Deconstructor ==========
 UpmixerAudioProcessor::~UpmixerAudioProcessor()
 {
 }

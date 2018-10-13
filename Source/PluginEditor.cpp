@@ -1,12 +1,11 @@
 
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 
-// ========== Define Constractor ==========
+// ========== Define Constructor ==========
 UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &p)
-    : AudioProcessorEditor( &p), processor(p)
+    : AudioProcessorEditor(&p), processor(p)
 {
     // slider for mixing the Front Side Channels
     gainSlider_FS.setSliderStyle(Slider::SliderStyle::LinearVertical);
@@ -14,7 +13,6 @@ UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &
     gainSlider_FS.setRange(-48, 6, 1);
     gainSlider_FS.setValue(0);
     gainSlider_FS.addListener(this);
-    gainSlider_FS.setBounds(60, 150, 80, 200);
     addAndMakeVisible (gainSlider_FS);
     
     // slider for mixing the Abience to the Front Side Channels
@@ -23,7 +21,6 @@ UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &
     gainSlider_FA.setRange(-48, 6, 1);
     gainSlider_FA.setValue(-12);
     gainSlider_FA.addListener(this);
-    gainSlider_FA.setBounds(160, 150, 80, 200);
     addAndMakeVisible (gainSlider_FA);
     
     // slider for mixing the Abience to the REAR Side Channels
@@ -32,7 +29,6 @@ UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &
     gainSlider_RA.setRange(-48, 6, 1);
     gainSlider_RA.setValue(-12);
     gainSlider_RA.addListener(this);
-    gainSlider_RA.setBounds(260, 150, 80, 200);
     addAndMakeVisible (gainSlider_RA);
     
     // set plugin's UI window size
@@ -126,6 +122,9 @@ void UpmixerAudioProcessorEditor::paint (Graphics& g)
 // ========== Define resized Method ==========
 void UpmixerAudioProcessorEditor::resized()
 {
+    gainSlider_FS.setBounds(60, 150, 80, 200);
+    gainSlider_FA.setBounds(160, 150, 80, 200);
+    gainSlider_RA.setBounds(260, 150, 80, 200);
 }
 
 

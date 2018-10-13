@@ -17,7 +17,7 @@
 class UpmixerAudioProcessor  : public AudioProcessor
 {
 public:
-    // declare constractor and deconstractor
+    // declare constructor and deconstructor
     UpmixerAudioProcessor();
     ~UpmixerAudioProcessor();
 
