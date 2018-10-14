@@ -1,3 +1,5 @@
+
+
 /*
   ==============================================================================
 
@@ -9,13 +11,17 @@
 
   ==============================================================================
 */
+
+
 #ifndef ISTFT_H_INCLUDED
 #define ISTFT_H_INCLUDED
+
 
 #include "Constants.h"
 #include "ffft/FFTReal.h"
 #include "Eigen/Eigen"
 #include <complex>
+
 
 using Eigen::MatrixXcf;
 using Eigen::MatrixXf;

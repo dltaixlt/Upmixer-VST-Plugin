@@ -1,3 +1,5 @@
+
+
 /*
   ==============================================================================
 
@@ -10,12 +12,15 @@
   ==============================================================================
 */
 
+
 #ifndef STFT_H_INCLUDED
 #define STFT_H_INCLUDED
 #include "Constants.h"
 
+
 #include "ffft/FFTReal.h"
 #include <complex>
+
 
 class STFT
 {
