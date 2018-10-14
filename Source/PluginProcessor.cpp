@@ -1,5 +1,16 @@
 
 
+/*
+ ==============================================================================
+ 
+ PluginProcessor.cpp
+ Created: 01 June 2018 10:24:47am
+ Author:  Dimitris Koutsaidis
+ 
+ ==============================================================================
+ */
+
+
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
@@ -12,80 +23,25 @@ UpmixerAudioProcessor::UpmixerAudioProcessor()
 
 
 // ========== Define Deconstructor ==========
-UpmixerAudioProcessor::~UpmixerAudioProcessor()
-{
-}
+UpmixerAudioProcessor::~UpmixerAudioProcessor() {}
 
 
-// ========== Define getName Method ==========
-const String UpmixerAudioProcessor::getName() const
-{
-    return JucePlugin_Name;
-}
-
-// ========== Define acceptsMidi Method ==========
-bool UpmixerAudioProcessor::acceptsMidi() const
-{
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-// ========== Define producesMidi Method ==========
-bool UpmixerAudioProcessor::producesMidi() const
-{
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-// ========== Define isMidiEffect Method ==========
-bool UpmixerAudioProcessor::isMidiEffect() const
-{
-   #if JucePlugin_IsMidiEffect
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-// ========== Define getTailLengthSeconds Method ==========
-double UpmixerAudioProcessor::getTailLengthSeconds() const
-{
-    return 0.0;
-}
-
-// ========== Define getNumPrograms Method ==========
-int UpmixerAudioProcessor::getNumPrograms()
-{
-    return 1;
-}
-
-// ========== Define getCurrentProgram Method ==========
-int UpmixerAudioProcessor::getCurrentProgram()
-{
-    return 0;
-}
-
-// ========== Define setCurrentProgram Method ==========
-void UpmixerAudioProcessor::setCurrentProgram (int index)
-{
-}
-
-// ========== Define getProgramName Method ==========
-const String UpmixerAudioProcessor::getProgramName (int index)
-{
-    return {};
-}
-
-// ========== Define changeProgramName Method ==========
-void UpmixerAudioProcessor::changeProgramName (int index, const String& newName)
-{
-}
+// ========== Define default JUCE methods ==========
+const String UpmixerAudioProcessor::getName() const { return JucePlugin_Name; }
+bool UpmixerAudioProcessor::acceptsMidi() const { return false; }
+bool UpmixerAudioProcessor::producesMidi() const { return false; }
+bool UpmixerAudioProcessor::isMidiEffect() const { return false; }
+double UpmixerAudioProcessor::getTailLengthSeconds() const { return 0.0; }
+int UpmixerAudioProcessor::getNumPrograms() { return 1; }
+int UpmixerAudioProcessor::getCurrentProgram() { return 0; }
+void UpmixerAudioProcessor::setCurrentProgram (int index) {}
+const String UpmixerAudioProcessor::getProgramName (int index) { return {}; }
+void UpmixerAudioProcessor::changeProgramName (int index, const String& newName) {}
+void UpmixerAudioProcessor::releaseResources() {}
+bool UpmixerAudioProcessor::hasEditor() const { return true; }
+AudioProcessorEditor* UpmixerAudioProcessor::createEditor() { return new UpmixerAudioProcessorEditor (*this); }
+void UpmixerAudioProcessor::getStateInformation (MemoryBlock& destData) {}
+void UpmixerAudioProcessor::setStateInformation (const void* data, int sizeInBytes) {}
 
 
 // ========== Define prepareToPlay Method ==========
@@ -93,14 +49,6 @@ void UpmixerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     updateFFTsize (2048);
 }
-
-
-// ========== Define releaseResources Method ==========
-void UpmixerAudioProcessor::releaseResources()
-{
-}
-
-
 
 
 // ==============================================================================
@@ -139,11 +87,11 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     fft->perform (timeDomainBuffer_right, frequencyDomainBuffer_right, false);
     
     // declare const var for Direct Component calculation
-    // exp(i*0.6*pi) = cos(0.6*pi) + i*sin(0.6*pi) = tmpExp
-    std::complex<float> tmpExp(-0.30901699437, -0.30901699437);
+    std::complex<float> tmpExp(-0.30901699437, -0.30901699437); // exp(i*0.6*pi) = cos(0.6*pi) + i*sin(0.6*pi) = tmpExp
     
     // Main Upmixing Processing Loop
     for (int sample = 0; sample < numSamples; ++sample) {
+        
         // calculation of Panning Coefficients
         float aL =  abs(frequencyDomainBuffer_left[sample]) / sqrt( abs(frequencyDomainBuffer_left[sample])*abs(frequencyDomainBuffer_left[sample]) + abs(frequencyDomainBuffer_right[sample])*abs(frequencyDomainBuffer_right[sample]) );
         float aR =  abs(frequencyDomainBuffer_right[sample]) / sqrt( abs(frequencyDomainBuffer_left[sample])*abs(frequencyDomainBuffer_left[sample]) + abs(frequencyDomainBuffer_right[sample])*abs(frequencyDomainBuffer_right[sample]) );
@@ -183,41 +131,57 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
         ChannelDataOut_5[sample] = timeDomain_NR[sample].real() * gainRA;
     }
 }
-// ==============================================================================
-// ==============================================================================
-// ==============================================================================
 
 
-
-
-// ========== Define hasEditor Method ==========
-bool UpmixerAudioProcessor::hasEditor() const
+// ========== Define updateFFTsize Method ==========
+void UpmixerAudioProcessor::updateFFTsize (const int newFFTsize)
 {
-    return true;
-}
-
-// ========== Define createEditor Method ==========
-AudioProcessorEditor* UpmixerAudioProcessor::createEditor()
-{
-    return new UpmixerAudioProcessorEditor (*this);
-}
-
-// ========== Define getStateInformation Method ==========
-void UpmixerAudioProcessor::getStateInformation (MemoryBlock& destData)
-{
-}
-
-// ========== Define setStateInformation Method ==========
-void UpmixerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
-{
+    fft = new dsp::FFT (log2 (newFFTsize));
+    
+    timeDomainBuffer_left.realloc (newFFTsize);
+    timeDomainBuffer_left.clear (newFFTsize);
+    timeDomainBuffer_right.realloc (newFFTsize);
+    timeDomainBuffer_right.clear (newFFTsize);
+    
+    frequencyDomainBuffer_left.realloc (newFFTsize);
+    frequencyDomainBuffer_left.clear (newFFTsize);
+    frequencyDomainBuffer_right.realloc (newFFTsize);
+    frequencyDomainBuffer_right.clear (newFFTsize);
+    
+    NL.realloc (newFFTsize);
+    NL.clear (newFFTsize);
+    NR.realloc (newFFTsize);
+    NR.clear (newFFTsize);
+    Direct.realloc (newFFTsize);
+    Direct.clear (newFFTsize);
+    DL.realloc (newFFTsize);
+    DL.clear (newFFTsize);
+    DR.realloc (newFFTsize);
+    DR.clear (newFFTsize);
+    DC_mag.realloc (newFFTsize);
+    DC_mag.clear (newFFTsize);
+    DC.realloc (newFFTsize);
+    DC.clear (newFFTsize);
+    CL.realloc (newFFTsize);
+    CL.clear (newFFTsize);
+    CR.realloc (newFFTsize);
+    CR.clear (newFFTsize);
+    
+    timeDomain_DL.realloc (newFFTsize);
+    timeDomain_DL.clear (newFFTsize);
+    timeDomain_DR.realloc (newFFTsize);
+    timeDomain_DR.clear (newFFTsize);
+    timeDomain_DC.realloc (newFFTsize);
+    timeDomain_DC.clear (newFFTsize);
+    timeDomain_NL.realloc (newFFTsize);
+    timeDomain_NL.clear (newFFTsize);
+    timeDomain_NR.realloc (newFFTsize);
+    timeDomain_NR.clear (newFFTsize);
 }
 
 
 // This creates new instances of the plugin..
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
-    return new UpmixerAudioProcessor();
-}
+AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new UpmixerAudioProcessor(); }
 
 
 // <----- EOF PluginProcessor.cpp

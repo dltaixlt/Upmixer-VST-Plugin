@@ -1,5 +1,16 @@
 
 
+/*
+ ==============================================================================
+ 
+ PluginProcessor.h
+ Created: 01 June 2018 10:24:47am
+ Author:  Dimitris Koutsaidis
+ 
+ ==============================================================================
+ */
+
+
 #pragma once
 
 #define _USE_MATH_DEFINES
@@ -46,51 +57,7 @@ public:
     
     
     // declare custom methods
-    void updateFFTsize (const int newFftSize)
-    {
-        fftSize = newFftSize;
-        fft = new dsp::FFT (log2 (fftSize));
-        
-        timeDomainBuffer_left.realloc (fftSize);
-        timeDomainBuffer_left.clear (fftSize);
-        timeDomainBuffer_right.realloc (fftSize);
-        timeDomainBuffer_right.clear (fftSize);
-        
-        frequencyDomainBuffer_left.realloc (fftSize);
-        frequencyDomainBuffer_left.clear (fftSize);
-        frequencyDomainBuffer_right.realloc (fftSize);
-        frequencyDomainBuffer_right.clear (fftSize);
-        
-        NL.realloc (fftSize);
-        NL.clear (fftSize);
-        NR.realloc (fftSize);
-        NR.clear (fftSize);
-        Direct.realloc (fftSize);
-        Direct.clear (fftSize);
-        DL.realloc (fftSize);
-        DL.clear (fftSize);
-        DR.realloc (fftSize);
-        DR.clear (fftSize);
-        DC_mag.realloc (fftSize);
-        DC_mag.clear (fftSize);
-        DC.realloc (fftSize);
-        DC.clear (fftSize);
-        CL.realloc (fftSize);
-        CL.clear (fftSize);
-        CR.realloc (fftSize);
-        CR.clear (fftSize);
-        
-        timeDomain_DL.realloc (fftSize);
-        timeDomain_DL.clear (fftSize);
-        timeDomain_DR.realloc (fftSize);
-        timeDomain_DR.clear (fftSize);
-        timeDomain_DC.realloc (fftSize);
-        timeDomain_DC.clear (fftSize);
-        timeDomain_NL.realloc (fftSize);
-        timeDomain_NL.clear (fftSize);
-        timeDomain_NR.realloc (fftSize);
-        timeDomain_NR.clear (fftSize);
-    }
+    void updateFFTsize (const int newFFTsize);
     
     
     // declare slider parameter vars
@@ -100,7 +67,6 @@ public:
     
 
 private:
-    int fftSize;
     ScopedPointer<dsp::FFT> fft;
 
     HeapBlock<dsp::Complex<float>> timeDomainBuffer_left;
