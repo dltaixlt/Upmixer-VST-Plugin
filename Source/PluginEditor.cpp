@@ -16,41 +16,49 @@
 
 // ========== Define Constructor ==========
 UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &p)
-    : AudioProcessorEditor(&p), processor(p)
+    :   AudioProcessorEditor(&p),
+        processor(p),
+        totalWidth(400),
+        totalHeight(400)
 {
     // slider for mixing the Front Side Channels
     gainSlider_FS.setSliderStyle(Slider::SliderStyle::LinearVertical);
-    gainSlider_FS.setTextBoxStyle(Slider::TextBoxBelow, true, 50, 25);
+    gainSlider_FS.setTextBoxStyle(Slider::TextBoxBelow, true, totalHeight/8, totalHeight/16);
     gainSlider_FS.setRange(-48, 6, 1);
     gainSlider_FS.setValue(0);
     gainSlider_FS.addListener(this);
     gainSlider_FS.addMouseListener(this, false);
-    addAndMakeVisible (gainSlider_FS);
+    addAndMakeVisible(gainSlider_FS);
     
     // slider for mixing the Abience to the Front Side Channels
     gainSlider_FA.setSliderStyle(Slider::SliderStyle::LinearVertical);
-    gainSlider_FA.setTextBoxStyle(Slider::TextBoxBelow, true, 50, 25);
+    gainSlider_FA.setTextBoxStyle(Slider::TextBoxBelow, true, totalHeight/8, totalHeight/16);
     gainSlider_FA.setRange(-48, 6, 1);
     gainSlider_FA.setValue(-12);
     gainSlider_FA.addListener(this);
     gainSlider_FA.addMouseListener(this, false);
-    addAndMakeVisible (gainSlider_FA);
+    addAndMakeVisible(gainSlider_FA);
     
     // slider for mixing the Abience to the REAR Side Channels
     gainSlider_RA.setSliderStyle(Slider::SliderStyle::LinearVertical);
-    gainSlider_RA.setTextBoxStyle(Slider::TextBoxBelow, true, 50, 25);
+    gainSlider_RA.setTextBoxStyle(Slider::TextBoxBelow, true, totalHeight/8, totalHeight/16);
     gainSlider_RA.setRange(-48, 6, 1);
     gainSlider_RA.setValue(-12);
     gainSlider_RA.addListener(this);
     gainSlider_RA.addMouseListener(this, false);
-    addAndMakeVisible (gainSlider_RA);
+    addAndMakeVisible(gainSlider_RA);
     
     // toggle TextButton for AboutBox
     AboutBoxToggle.setButtonText("About");
+    AboutBoxToggle.setColour(TextButton::buttonColourId, Colours::transparentBlack);
+    AboutBoxToggle.setColour(TextButton::buttonOnColourId, Colours::transparentBlack);
     AboutBoxToggle.addListener(this);
-    addAndMakeVisible (AboutBoxToggle);
+    addAndMakeVisible(AboutBoxToggle);
+    
     // set plugin's UI window size
-    setSize (400, 400);
+    setSize(totalWidth, totalHeight);
+    setResizable(true, true);
+    
 }
 
 
@@ -120,11 +128,26 @@ void UpmixerAudioProcessorEditor::paint (Graphics& g)
 // ========== Define resized Method ==========
 void UpmixerAudioProcessorEditor::resized()
 {
-    gainSlider_FS.setBounds(60, 150, 80, 200);
-    gainSlider_FA.setBounds(160, 150, 80, 200);
-    gainSlider_RA.setBounds(260, 150, 80, 200);
+    const int sliderYpos = totalHeight*3/8;
+    const int sliderWidth = totalHeight/8;
+    const int sliderHeight = totalHeight/2;
     
-    AboutBoxToggle.setBounds(18, 370, 50, 20);
+    // define UI areas
+    auto area = getLocalBounds();
+    auto topArea = area.removeFromTop(sliderYpos);
+    auto sliderArea = area.removeFromTop(sliderHeight);
+    auto bottomArea = area.removeFromTop(totalHeight - sliderYpos - sliderHeight);
+    
+    // position Sliders
+    sliderArea.removeFromLeft(1.5*sliderWidth);
+    gainSlider_FS.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    sliderArea.removeFromLeft(sliderWidth);
+    gainSlider_FA.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    sliderArea.removeFromLeft(sliderWidth);
+    gainSlider_RA.setBounds(sliderArea.removeFromLeft(sliderWidth));
+    
+    // position Button
+    AboutBoxToggle.setBounds(18, 376, 54, 18);
 }
 
 
