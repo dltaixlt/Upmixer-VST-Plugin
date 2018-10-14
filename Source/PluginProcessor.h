@@ -1,5 +1,3 @@
-
-
 /*
  ==============================================================================
  
@@ -20,7 +18,6 @@
 #include <stdlib.h>
 #include <complex.h>
 #include <limits>
-
 #include "../JuceLibraryCode/JuceHeader.h"
 
 

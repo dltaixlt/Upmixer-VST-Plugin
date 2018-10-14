@@ -1,5 +1,3 @@
-
-
 /*
  ==============================================================================
  
@@ -59,6 +57,9 @@ UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &
     aboutBox = new AboutBox();
     addChildComponent(aboutBox);
     aboutBox->setVisible(false);
+    testBox = new test();
+    addChildComponent(testBox);
+    testBox->setVisible(false);
     
     // set plugin's UI window size
     setSize(totalWidth, totalHeight);
@@ -154,6 +155,7 @@ void UpmixerAudioProcessorEditor::resized()
     
     // about box
     aboutBox->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
+    testBox->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 
@@ -180,7 +182,8 @@ void UpmixerAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 {
     if (buttonThatWasClicked == &AboutBoxToggle)
     {
-        aboutBox->setVisible(true);
+        //aboutBox->setVisible(true);
+        testBox->setVisible(true);
     }
 }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="Da7JKE" name="upmixer" projectType="audioplug" jucerVersion="5.2.1"
-              version="1.0.0" pluginFormats="buildAU,buildVST,buildVST3" pluginChannelConfigs="{2,5}"
+<JUCERPROJECT id="Da7JKE" name="upmixer" projectType="audioplug" jucerVersion="5.3.2"
+              version="1.0.0" pluginFormats="buildVST" pluginChannelConfigs="{2,5}"
               companyName="dkoutsaidis" companyEmail="dkoutsaidis@gmail.com"
               pluginManufacturer="dkoutsaidis" pluginVSTCategory="kPlugCategSpacializer"
               pluginName="upmixer" pluginDesc="stereo to surround upmixer"
@@ -14,6 +14,8 @@
     <GROUP id="{4B1B3607-B636-DAD6-EBE2-B958C1BDC23F}" name="UI">
       <FILE id="PkmiXU" name="AboutBox.cpp" compile="1" resource="0" file="Source/AboutBox.cpp"/>
       <FILE id="XtSt9B" name="AboutBox.h" compile="0" resource="0" file="Source/AboutBox.h"/>
+      <FILE id="ZDwMFr" name="test.cpp" compile="1" resource="0" file="Source/test.cpp"/>
+      <FILE id="xtNC9G" name="test.h" compile="0" resource="0" file="Source/test.h"/>
     </GROUP>
     <GROUP id="{51B69490-B5D3-4D01-6172-741A2220F197}" name="STFT">
       <FILE id="qfoxAq" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
@@ -72,7 +74,7 @@
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
   </MODULES>
   <LIVE_SETTINGS>
-    <OSX/>
+    <OSX buildEnabled="0"/>
   </LIVE_SETTINGS>
   <JUCEOPTIONS/>
 </JUCERPROJECT>
