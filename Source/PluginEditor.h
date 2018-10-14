@@ -1,5 +1,16 @@
 
 
+/*
+ ==============================================================================
+ 
+ PluginEditor.h
+ Created: 01 June 2018 10:24:47am
+ Author:  Dimitris Koutsaidis
+ 
+ ==============================================================================
+ */
+
+
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
@@ -11,7 +22,8 @@
 
 // ========== Declare the Plug-In's editor class ==========
 class UpmixerAudioProcessorEditor  : public AudioProcessorEditor,
-                                     public Slider::Listener
+                                     public Slider::Listener,
+                                     public Button::Listener
 {
 public:
     // declare constructor and deconstructor
@@ -24,6 +36,8 @@ public:
     
     // declare custom methods
     void sliderValueChanged(Slider *) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
+    void mouseUp (const juce::MouseEvent &e) override;
 
 private:
     // audio processor's object
@@ -33,6 +47,9 @@ private:
     Slider gainSlider_FS;
     Slider gainSlider_FA;
     Slider gainSlider_RA;
+    
+    // buttons
+    TextButton AboutBoxToggle;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(UpmixerAudioProcessorEditor)
 };

@@ -1,5 +1,16 @@
 
 
+/*
+ ==============================================================================
+ 
+ PluginEditor.cpp
+ Created: 01 June 2018 10:24:47am
+ Author:  Dimitris Koutsaidis
+ 
+ ==============================================================================
+ */
+
+
 #include "PluginEditor.h"
 
 
@@ -13,6 +24,7 @@ UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &
     gainSlider_FS.setRange(-48, 6, 1);
     gainSlider_FS.setValue(0);
     gainSlider_FS.addListener(this);
+    gainSlider_FS.addMouseListener(this, false);
     addAndMakeVisible (gainSlider_FS);
     
     // slider for mixing the Abience to the Front Side Channels
@@ -21,6 +33,7 @@ UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &
     gainSlider_FA.setRange(-48, 6, 1);
     gainSlider_FA.setValue(-12);
     gainSlider_FA.addListener(this);
+    gainSlider_FA.addMouseListener(this, false);
     addAndMakeVisible (gainSlider_FA);
     
     // slider for mixing the Abience to the REAR Side Channels
@@ -29,8 +42,13 @@ UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &
     gainSlider_RA.setRange(-48, 6, 1);
     gainSlider_RA.setValue(-12);
     gainSlider_RA.addListener(this);
+    gainSlider_RA.addMouseListener(this, false);
     addAndMakeVisible (gainSlider_RA);
     
+    // toggle TextButton for AboutBox
+    AboutBoxToggle.setButtonText("About");
+    AboutBoxToggle.addListener(this);
+    addAndMakeVisible (AboutBoxToggle);
     // set plugin's UI window size
     setSize (400, 400);
 }
@@ -49,72 +67,52 @@ void UpmixerAudioProcessorEditor::paint (Graphics& g)
     
     // add title
     {
-        int x = 109, y = 20, width = 184, height = 32;
-        String text (TRANS("Upmixer"));
-        Colour fillColour = Colour(71, 163, 198);
-        g.setColour (fillColour);
+        g.setColour (Colour(71, 163, 198));
         g.setFont (Font (18.80f, Font::plain).withTypefaceStyle ("Bold"));
-        g.drawText (text, x, y, width, height, Justification::centred, true);
+        g.drawText (TRANS("Upmixer"), 109, 20, 184, 32, Justification::centred, true);
     }
     
     // add description
     {
-        int x = 56, y = 45, width = 288, height = 32;
-        String text (TRANS("Stereo (L+R)  to 5.x (L+R+C+Ls+Rs)"));
-        Colour fillColour = Colour(71, 163, 198);
-        g.setColour (fillColour);
+        g.setColour (Colour(71, 163, 198));
         g.setFont (Font (14.00f, Font::plain).withTypefaceStyle ("Bold"));
-        g.drawText (text, x, y, width, height, Justification::centred, true);
+        g.drawText (TRANS("Stereo (L+R)  to 5.x (L+R+C+Ls+Rs)"), 56, 45, 288, 32, Justification::centred, true);
     }
     
     // add labels for the 3 sliders
     {
         int x = 50, width = 100, height = 32;
-        String text1 (TRANS("Gain"));
-        String text2 (TRANS("of"));
-        String text3 (TRANS("Front Side"));
-        Colour fillColour = Colour(24, 31, 34);
-        g.setColour (fillColour);
+        g.setColour (Colour(24, 31, 34));
         g.setFont (Font (12.00f, Font::plain).withTypefaceStyle ("Bold"));
-        g.drawText (text1, x, 100, width, height, Justification::centred, true);
-        g.drawText (text2, x, 112, width, height, Justification::centred, true);
-        g.drawText (text3, x, 124, width, height, Justification::centred, true);
+        g.drawText (TRANS("Gain"), x, 100, width, height, Justification::centred, true);
+        g.drawText (TRANS("of"), x, 112, width, height, Justification::centred, true);
+        g.drawText (TRANS("Front Side"), x, 124, width, height, Justification::centred, true);
     }
     
     {
         int x = 150, width = 100, height = 32;
-        String text1 (TRANS("Ambience"));
-        String text2 (TRANS("to"));
-        String text3 (TRANS("Front Side"));
-        Colour fillColour = Colour(24, 31, 34);
-        g.setColour (fillColour);
+        g.setColour (Colour(24, 31, 34));
         g.setFont (Font (12.00f, Font::plain).withTypefaceStyle ("Bold"));
-        g.drawText (text1, x, 100, width, height, Justification::centred, true);
-        g.drawText (text2, x, 112, width, height, Justification::centred, true);
-        g.drawText (text3, x, 124, width, height, Justification::centred, true);
+        g.drawText (TRANS("Ambience"), x, 100, width, height, Justification::centred, true);
+        g.drawText (TRANS("to"), x, 112, width, height, Justification::centred, true);
+        g.drawText (TRANS("Front Side"), x, 124, width, height, Justification::centred, true);
     }
     
     {
         int x = 250, width = 100, height = 32;
-        String text1 (TRANS("Ambience"));
-        String text2 (TRANS("to"));
-        String text3 (TRANS("Rear Side"));
-        Colour fillColour = Colour(24, 31, 34);
-        g.setColour (fillColour);
+        g.setColour (Colour(24, 31, 34));
         g.setFont (Font (12.00f, Font::plain).withTypefaceStyle ("Bold"));
-        g.drawText (text1, x, 100, width, height, Justification::centred, true);
-        g.drawText (text2, x, 112, width, height, Justification::centred, true);
-        g.drawText (text3, x, 124, width, height, Justification::centred, true);
+        g.drawText (TRANS("Ambience"), x, 100, width, height, Justification::centred, true);
+        g.drawText (TRANS("to"), x, 112, width, height, Justification::centred, true);
+        g.drawText (TRANS("Rear Side"), x, 124, width, height, Justification::centred, true);
     }
     
     // add info for the Plug-In
     {
-        int x = 200, y = 380, width = 530, height = 11;
         String text (TRANS("Ver: ") + JucePlugin_VersionString + BUILD_VER_SUFFIX + TRANS(", Build Date: ") + __DATE__ + TRANS(" "));
-        Colour fillColour = Colours::white;
-        g.setColour (fillColour);
+        g.setColour (Colours::white);
         g.setFont(Font(11.00f, Font::plain));
-        g.drawText(text, x, y, width, height, Justification::centredLeft, true);
+        g.drawText(text, 200, 380, 530, 11, Justification::centredLeft, true);
     }
 }
 
@@ -125,6 +123,8 @@ void UpmixerAudioProcessorEditor::resized()
     gainSlider_FS.setBounds(60, 150, 80, 200);
     gainSlider_FA.setBounds(160, 150, 80, 200);
     gainSlider_RA.setBounds(260, 150, 80, 200);
+    
+    AboutBoxToggle.setBounds(18, 370, 50, 20);
 }
 
 
@@ -142,6 +142,41 @@ void UpmixerAudioProcessorEditor::sliderValueChanged(Slider *slider)
     if (slider == &gainSlider_RA)
     {
         processor.gainRA = pow(10, (gainSlider_RA.getValue() / 20));;
+    }
+}
+
+
+// ========== Define buttonClicked Method ==========
+void UpmixerAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
+{
+    if (buttonThatWasClicked == &AboutBoxToggle)
+    {
+        // set visible the AboutBox
+    }
+}
+
+
+// ========== Define mouseUp Method ==========
+void UpmixerAudioProcessorEditor::mouseUp(const juce::MouseEvent &e)
+{
+    Component* componentThatWasClicked = e.eventComponent;
+    int shiftClick = (ModifierKeys::leftButtonModifier | ModifierKeys::shiftModifier);
+    bool isShiftClickDown = e.mods.getRawFlags() == shiftClick;
+    
+    if (componentThatWasClicked == &gainSlider_FS)
+    {
+        if (isShiftClickDown)
+            gainSlider_FS.setValue(0);
+    }
+    else if (componentThatWasClicked == &gainSlider_FA)
+    {
+        if (isShiftClickDown)
+            gainSlider_FA.setValue(-12);
+    }
+    else if (componentThatWasClicked == &gainSlider_RA)
+    {
+        if (isShiftClickDown)
+            gainSlider_RA.setValue(-12);
     }
 }
 
