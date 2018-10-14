@@ -15,6 +15,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "AboutBox.h"
 
 
 #define BUILD_VER_SUFFIX " beta" // String to be added before the version name on the GUI (e.g. beta, alpha etc..)
@@ -42,6 +43,8 @@ public:
 private:
     // audio processor's object
     UpmixerAudioProcessor &processor;
+    
+    ScopedPointer<AboutBox> aboutBox;
     
     // sliders
     Slider gainSlider_FS;

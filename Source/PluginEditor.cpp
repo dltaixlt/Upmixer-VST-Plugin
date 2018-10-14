@@ -55,10 +55,13 @@ UpmixerAudioProcessorEditor::UpmixerAudioProcessorEditor(UpmixerAudioProcessor &
     AboutBoxToggle.addListener(this);
     addAndMakeVisible(AboutBoxToggle);
     
+    // about box
+    aboutBox = new AboutBox();
+    addChildComponent(aboutBox);
+    aboutBox->setVisible(false);
+    
     // set plugin's UI window size
     setSize(totalWidth, totalHeight);
-    setResizable(true, true);
-    
 }
 
 
@@ -148,6 +151,9 @@ void UpmixerAudioProcessorEditor::resized()
     
     // position Button
     AboutBoxToggle.setBounds(18, 376, 54, 18);
+    
+    // about box
+    aboutBox->setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 
@@ -174,7 +180,7 @@ void UpmixerAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 {
     if (buttonThatWasClicked == &AboutBoxToggle)
     {
-        // set visible the AboutBox
+        aboutBox->setVisible(true);
     }
 }
 

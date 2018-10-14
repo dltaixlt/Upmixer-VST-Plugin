@@ -11,6 +11,10 @@
               pluginWantsMidiIn="0" pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0"
               pluginEditorRequiresKeys="0">
   <MAINGROUP id="wVx5gn" name="upmixer">
+    <GROUP id="{4B1B3607-B636-DAD6-EBE2-B958C1BDC23F}" name="UI">
+      <FILE id="PkmiXU" name="AboutBox.cpp" compile="1" resource="0" file="Source/AboutBox.cpp"/>
+      <FILE id="XtSt9B" name="AboutBox.h" compile="0" resource="0" file="Source/AboutBox.h"/>
+    </GROUP>
     <GROUP id="{51B69490-B5D3-4D01-6172-741A2220F197}" name="STFT">
       <FILE id="qfoxAq" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
       <FILE id="wV1q7E" name="ISTFT.cpp" compile="0" resource="0" file="Source/ISTFT.cpp"/>
