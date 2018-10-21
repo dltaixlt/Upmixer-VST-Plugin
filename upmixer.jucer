@@ -18,7 +18,6 @@
       <FILE id="xtNC9G" name="test.h" compile="0" resource="0" file="Source/test.h"/>
     </GROUP>
     <GROUP id="{51B69490-B5D3-4D01-6172-741A2220F197}" name="STFT">
-      <FILE id="qfoxAq" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
       <FILE id="wV1q7E" name="ISTFT.cpp" compile="0" resource="0" file="Source/ISTFT.cpp"/>
       <FILE id="zUtSUL" name="ISTFT.h" compile="0" resource="0" file="Source/ISTFT.h"/>
       <FILE id="nZ1CL4" name="STFT.cpp" compile="1" resource="0" file="Source/STFT.cpp"/>
