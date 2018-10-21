@@ -79,7 +79,7 @@ void test::paint (Graphics& g)
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colour (0x2147a3c6));
+    g.fillAll (Colour (0x60000000));
 
     {
         float x = static_cast<float> (-326), y = 0.0f, width = 660.0f, height = 778.0f;
@@ -199,7 +199,7 @@ void test::paint (Graphics& g)
     }
 
     {
-        int x = proportionOfWidth (0.0500f), y = proportionOfHeight (0.9200f), width = proportionOfWidth (0.2500f), height = proportionOfHeight (0.0600f);
+        int x = proportionOfWidth (0.0600f), y = proportionOfHeight (0.8800f), width = proportionOfWidth (0.3000f), height = proportionOfHeight (0.1200f);
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
         g.setColour (Colours::black);
@@ -259,7 +259,7 @@ BEGIN_JUCER_METADATA
                  constructorParams="" variableInitialisers="" snapPixels="8" snapActive="1"
                  snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="400"
                  initialHeight="400">
-  <BACKGROUND backgroundColour="2147a3c6">
+  <BACKGROUND backgroundColour="60000000">
     <ELLIPSE pos="-326 0 660 778" fill="solid: fff0f0f0" hasStroke="0"/>
     <TEXT pos="5% 18% 95% 4%" fill="solid: ff000000" hasStroke="0" text="Developed by"
           fontname="Default font" fontsize="12.00000000000000000000" kerning="0.00000000000000000000"
@@ -288,7 +288,7 @@ BEGIN_JUCER_METADATA
     <TEXT pos="5% 73% 95% 4%" fill="solid: ff000000" hasStroke="0" text="Wire Communications Laboratory,"
           fontname="Default font" fontsize="12.00000000000000000000" kerning="0.00000000000000000000"
           bold="0" italic="0" justification="33"/>
-    <IMAGE pos="5% 92% 25% 6%" resource="audiogrouplogo_png" opacity="1.00000000000000000000"
+    <IMAGE pos="6% 88% 30% 12%" resource="audiogrouplogo_png" opacity="1.00000000000000000000"
            mode="1"/>
   </BACKGROUND>
   <HYPERLINKBUTTON name="new hyperlink" id="d29248728db24ae0" memberName="hyperlinkButton"
