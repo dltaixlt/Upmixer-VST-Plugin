@@ -21,7 +21,7 @@
       <FILE id="qfoxAq" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
       <FILE id="wV1q7E" name="ISTFT.cpp" compile="0" resource="0" file="Source/ISTFT.cpp"/>
       <FILE id="zUtSUL" name="ISTFT.h" compile="0" resource="0" file="Source/ISTFT.h"/>
-      <FILE id="nZ1CL4" name="STFT.cpp" compile="0" resource="0" file="Source/STFT.cpp"/>
+      <FILE id="nZ1CL4" name="STFT.cpp" compile="1" resource="0" file="Source/STFT.cpp"/>
       <FILE id="ayCbqf" name="STFT.h" compile="0" resource="0" file="Source/STFT.h"/>
     </GROUP>
     <GROUP id="{1B48AB26-9AD5-7E67-483D-383E0FDEC597}" name="Source">

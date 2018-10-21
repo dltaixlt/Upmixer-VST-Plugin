@@ -14,7 +14,8 @@
 #include "STFT.h"
 
 
-STFT::STFT(int numSamps) : fft((long)WINDOW_SIZE)
+STFT::STFT(int numSamps)
+    : fft((long)WINDOW_SIZE)
 {
 	// constructor
 	numSamples = numSamps;
