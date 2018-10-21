@@ -1,25 +1,15 @@
-
-
 /*
   ==============================================================================
 
     STFT.h
-    Created: 21 May 2015 2:24:47pm
-    Author:  Sean Breen
-	
-	Handles performing a forward FFT on an array of real floats
+    Created: 21 Oct 2018 2:06:23pm
+    Author: Dimitris Koutsaidis
 
   ==============================================================================
 */
 
 
-#ifndef STFT_H_INCLUDED
-#define STFT_H_INCLUDED
-#include "Constants.h"
-
-
-#include "ffft/FFTReal.h"
-#include <complex>
+#include "../JuceLibraryCode/JuceHeader.h"
 
 
 class STFT
@@ -34,17 +24,10 @@ public:
 
 	/*
 		Constructor
-		input: number of samples in window (WINDOW_SIZE)
+		input: number of samples in window (numSamples)
 	*/
 	STFT(int numSamps);
 	~STFT();
-
-	/*
-		Performs forward FFT on float array
-		Input: pointer to array of floats from wav file
-		Output: pointer to transformed array of floats
-	*/
-	float* performForwardTransform(float* array);
 
 	/*
 		Initializes the window function
@@ -58,26 +41,12 @@ public:
 		Input: array on which the fuction will be applied
 		Output: none
 	*/
-	void applyWindowFunction(float* array);
-
-	/*
-		Converts array of real floats to complex floats
-		input: pointer to array of Real floats
-		Output: pointer to array converted to complex floats
-	*/
-	std::complex<float>* realToComplex(float* data);
+	void applyWindowFunction(std::complex<float>* array);
 	
 private:
 
 	// private variables/methods go here
 	int numSamples;
-	ffft::FFTReal<float> fft;
-	float window[WINDOW_SIZE];
-	float results[WINDOW_SIZE];
-	std::complex<float> comp[WINDOW_SIZE / 2];
+	float window[2048];
 
 };
-
-
-
-#endif  // STFT_H_INCLUDED

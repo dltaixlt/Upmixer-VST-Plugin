@@ -16,6 +16,9 @@
 // ========== Define Constructor ==========
 UpmixerAudioProcessor::UpmixerAudioProcessor()
 {
+    upmixerSTFT.reset(new STFT(2048));
+    upmixerSTFT->initWindow(1);
+    
     updateFFTsize (2048);
 }
 
@@ -70,9 +73,8 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     float* const ChannelDataOut_4 = buffer.getWritePointer(3);
     float* const ChannelDataOut_5 = buffer.getWritePointer(4);
     
-    // main STFT analysis loop
+    // STFT
     for (int sample = 0; sample < numSamples; ++sample) {
-        // input sample per channel
         timeDomainBuffer_left[sample].real (channelData_left[sample]);
         timeDomainBuffer_left[sample].imag (0.0f);
         
@@ -80,11 +82,14 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
         timeDomainBuffer_right[sample].imag (0.0f);
     }
     
-    // FFT - Analysis
+    upmixerSTFT->applyWindowFunction(timeDomainBuffer_left);
+    upmixerSTFT->applyWindowFunction(timeDomainBuffer_right);
+    
+    // analysis
     fft->perform (timeDomainBuffer_left, frequencyDomainBuffer_left, false);
     fft->perform (timeDomainBuffer_right, frequencyDomainBuffer_right, false);
     
-    // declare const var for Direct Component calculation
+    // define const var for Direct Component calculation
     std::complex<float> tmpExp(-0.30901699437, -0.30901699437); // exp(i*0.6*pi) = cos(0.6*pi) + i*sin(0.6*pi) = tmpExp
     
     // Main Upmixing Processing Loop
@@ -105,7 +110,7 @@ void UpmixerAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
         NR[sample] = frequencyDomainBuffer_right[sample] - DR[sample];
         
         // up-mixing Direct Component
-        // sqrt(0.5) = 0.70710678118
+        // define sqrt(0.5) = 0.70710678118
         DC_mag[sample] = (float)0.70710678118 * (abs(DL[sample]+DR[sample])-abs(DL[sample]-DR[sample])); // Center Channel Magnitude
         float nl_dbl_min = std::numeric_limits<float>::min();
         DC[sample] = ((DL[sample]+DR[sample]) * DC_mag[sample]) / (abs(DL[sample]+DR[sample])+nl_dbl_min); // Calculation of Center Channel

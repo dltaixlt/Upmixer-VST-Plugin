@@ -13,12 +13,14 @@
 
 #define _USE_MATH_DEFINES
 
+
+#include "../JuceLibraryCode/JuceHeader.h"
 #include <cmath>
 #include <math.h>
 #include <stdlib.h>
 #include <complex.h>
 #include <limits>
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "STFT.h"
 
 
 // ========== Declare the Plug-In's processor class ==========
@@ -86,6 +88,8 @@ private:
     HeapBlock<dsp::Complex<float>> timeDomain_DC;
     HeapBlock<dsp::Complex<float>> timeDomain_NL;
     HeapBlock<dsp::Complex<float>> timeDomain_NR;
+    
+    std::unique_ptr<STFT> upmixerSTFT;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UpmixerAudioProcessor)
 };
